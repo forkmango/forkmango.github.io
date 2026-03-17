@@ -3,18 +3,18 @@
       // ──────────────────────────────────────────
       const SECTIONS = {
         intro: {
-          query: "Prénom Nom – Portfolio",
+          query: "Profil",
           stats: "Environ 1 résultat (0,00042 seconde)",
           featured: {
-            label: "Profil · portfolio.dev",
+            label: "Profil",
             title: "Qui suis-je ?",
-            text: "[Placeholder] Présente-toi ici en 3-4 phrases. Ton domaine, ta passion, ce qui te rend unique. Par exemple : étudiant en informatique passionné par l'IA et le design, à la recherche d'opportunités...",
+            text: "Étudiante en informatique passionné par l'IA, les bases de données et les systèmes réseaux.",
           },
           results: [
             {
-              domain: "portfolio.dev",
+              domain: "Github",
               letter: "P",
-              url: "portfolio.dev › intro › à-propos",
+              url: "Github",
               title: "[Ton Prénom Nom] – Développeur & [Titre]",
               snippet:
                 "[Placeholder] Résumé de ta situation actuelle. Université, poste, ville. Ce que tu cherches. <span class='highlight'>[Disponible pour des stages / alternances / CDI]</span> à partir de [date].",
@@ -33,31 +33,31 @@
               domain: "linkedin.com",
               letter: "in",
               color: "#0077B5",
-              url: "linkedin.com › in › [ton-profil]",
-              title: "[Ton Nom] | LinkedIn",
+              url: "linkedin.com › in › nina-schoellhammer",
+              title: "Nina SCHOELLHAMMER",
               snippet:
-                "[Placeholder] Résumé LinkedIn. <span class='highlight'>[Nombre] relations</span> · Étudiant chez [École] · Passionné par [domaine]...",
+                "Lieu : Orsay · 282 relations sur LinkedIn. Consultez le profil de Nina SCHOELLHAMMER sur LinkedIn, une communauté professionnelle d'un milliard de membres.",
             },
           ],
           paa: [
             {
               q: "Quelles sont mes disponibilités ?",
-              a: "[Placeholder] Disponible à partir de [mois année] pour [type de contrat]. N'hésite pas à me contacter pour en discuter.",
+              a: "Disponible à partir de septembre 2026 pour une <b>alternance<b>. N'hésitez pas à me contacter pour en discuter.",
             },
             {
               q: "Quels langages de programmation je maîtrise ?",
-              a: "[Placeholder] Voir la section Skills pour la liste complète. Mes langages principaux sont [langages].",
+              a: "Voir la section Skills pour la liste complète.",
             },
             {
               q: "Comment me contacter ?",
-              a: "[Placeholder] Par email à [email@exemple.com] ou via LinkedIn. Je réponds généralement sous 24h.",
+              a: "Par email à ninachoellhammer@outlook.com ou via LinkedIn. Je réponds généralement sous 24h.",
             },
           ],
           related: [
-            "parcours académique [Nom]",
-            "[Nom] projets GitHub",
-            "[Nom] stage 2025",
-            "[Nom] compétences",
+            "Parcours académique et expériences",
+            "Projets",
+            "Stage 2026",
+            "Skills"
           ],
           card: {
             emoji: "👤",
