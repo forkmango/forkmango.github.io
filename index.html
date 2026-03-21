@@ -1,15 +1,1240 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Nina Schoellhammer - Étudiante en Informatique | Data Science, IA & Cybersécurité">
-    <meta name="author" content="Nina Schoellhammer">
-    <title>Nina SCHOELLHAMMER | Portfolio</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NinaGPT</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Söhne:wght@400;500;600&family=Söhne+Mono&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #212121;
+    --bg-secondary: #2f2f2f;
+    --bg-input: #2f2f2f;
+    --bg-hover: #3a3a3a;
+    --text: #ececec;
+    --text-muted: #8e8ea0;
+    --text-dim: #b4b4b4;
+    --border: #3f3f3f;
+    --accent: #10a37f;
+    --accent-hover: #0d8f6f;
+    --pill-bg: #2f2f2f;
+    --pill-hover: #3a3a3a;
+    --response-bg: #212121;
+    --sidebar-bg: #171717;
+    --font: 'DM Sans', -apple-system, sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--bg);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .brand:hover { background: var(--bg-hover); }
+
+  .brand-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .brand-chevron {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-left: 2px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-outline {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+  }
+  .btn-outline:hover { background: var(--bg-hover); }
+
+  .btn-primary {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: var(--text);
+    color: #000;
+  }
+  .btn-primary:hover { background: #d4d4d4; }
+
+  /* ─── LANG TOGGLE ─── */
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .lang-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .lang-btn.active {
+    background: var(--bg-hover);
+    color: var(--text);
+  }
+
+  /* ─── MAIN HOME ─── */
+  .home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 80px 20px 180px;
+    transition: opacity 0.3s;
+  }
+
+  .home-title {
+    font-size: clamp(28px, 5vw, 36px);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 32px;
+    text-align: center;
+    letter-spacing: -0.5px;
+  }
+
+  /* ─── SEARCH BOX ─── */
+  .search-wrapper {
+    width: 100%;
+    max-width: 680px;
+    position: relative;
+  }
+
+  .search-box {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 56px 18px 20px;
+    font-size: 16px;
+    font-family: var(--font);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: none;
+    min-height: 60px;
+    line-height: 1.5;
+  }
+  .search-box::placeholder { color: var(--text-muted); }
+  .search-box:focus {
+    border-color: #555;
+    box-shadow: 0 0 0 1px #555;
+  }
+
+  .search-send {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 34px; height: 34px;
+    background: var(--text);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    color: #000;
+  }
+  .search-send:hover { background: #d4d4d4; }
+  .search-send:disabled { background: var(--border); cursor: default; }
+  .search-send:disabled svg path { stroke: var(--text-muted); }
+
+  /* ─── SUGGESTIONS DROPDOWN ─── */
+  .suggestions-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0; right: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 200;
+    display: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .suggestions-dropdown.visible { display: block; }
+
+  .suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .suggestion-item:hover { background: var(--bg-hover); }
+  .suggestion-icon {
+    width: 32px; height: 32px;
+    background: var(--bg-hover);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .suggestion-meta { color: var(--text-muted); font-size: 12px; margin-top: 1px; }
+
+  /* ─── SUGGESTION PILLS ─── */
+  .pills-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 680px;
+  }
+
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--pill-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .pill:hover {
+    background: var(--pill-hover);
+    color: var(--text);
+    border-color: #555;
+  }
+  .pill-emoji { font-size: 15px; }
+
+  /* ─── RESPONSE SCREEN ─── */
+  .response-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 64px;
+  }
+  .response-screen.active { display: flex; }
+
+  .response-content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 200px;
+    width: 100%;
+  }
+
+  /* ─── USER MESSAGE ─── */
+  .user-message-bubble {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+  }
+  .user-bubble {
+    background: var(--bg-secondary);
+    border-radius: 18px 18px 4px 18px;
+    padding: 12px 18px;
+    font-size: 15px;
+    max-width: 80%;
+    line-height: 1.5;
+  }
+
+  /* ─── NINA RESPONSE ─── */
+  .nina-response {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .nina-avatar {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .nina-text { flex: 1; font-size: 15px; line-height: 1.7; color: var(--text); }
+
+  .nina-text h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 28px 0 12px;
+    color: var(--text);
+  }
+  .nina-text h2:first-child { margin-top: 0; }
+  .nina-text h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+  }
+  .nina-text p { margin-bottom: 12px; }
+  .nina-text ul { padding-left: 20px; margin-bottom: 12px; }
+  .nina-text li { margin-bottom: 6px; }
+
+  .tag {
+    display: inline-block;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    margin: 3px;
+  }
+  .tag.green { border-color: #10a37f44; color: #10a37f; background: #10a37f11; }
+  .tag.blue { border-color: #3b82f644; color: #60a5fa; background: #3b82f611; }
+  .tag.purple { border-color: #a855f744; color: #c084fc; background: #a855f711; }
+  .tag.orange { border-color: #f97316aa; color: #fb923c; background: #f9731611; }
+
+  .project-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+  }
+  .project-card:hover { border-color: #555; }
+  .project-card-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .project-card-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+  .timeline-item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 24px;
+    position: relative;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 28px;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .timeline-item:last-child::before { display: none; }
+  .timeline-dot {
+    width: 32px; height: 32px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .timeline-body { flex: 1; }
+  .timeline-date { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-family: var(--font-mono); }
+  .timeline-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .timeline-sub { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+  /* ─── TYPING ANIMATION ─── */
+  .typing-indicator {
+    display: flex; gap: 4px; align-items: center;
+    padding: 8px 0;
+  }
+  .typing-dot {
+    width: 6px; height: 6px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    animation: typing 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+
+  /* ─── BOTTOM INPUT (response mode) ─── */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 16px 20px 24px;
+    background: linear-gradient(transparent, var(--bg) 40%);
+    z-index: 50;
+  }
+  .bottom-input-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .bottom-box {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 56px 14px 18px;
+    font-size: 15px;
+    font-family: var(--font);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+    min-height: 52px;
+  }
+  .bottom-box::placeholder { color: var(--text-muted); }
+  .bottom-box:focus { border-color: #555; }
+  .bottom-send {
+    position: absolute;
+    right: 10px; bottom: 10px;
+    width: 32px; height: 32px;
+    background: var(--text);
+    border: none; border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #000;
+    transition: background 0.15s;
+  }
+  .bottom-send:hover { background: #d4d4d4; }
+
+  /* ─── ACTION ROW (below response) ─── */
+  .action-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .action-btn:hover { background: var(--bg-secondary); color: var(--text); }
+
+  /* ─── RELATED PILLS ─── */
+  .related-section { margin-top: 32px; border-top: 1px solid var(--border); padding-top: 20px; }
+  .related-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .related-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .related-pill {
+    padding: 8px 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .related-pill:hover { background: var(--bg-hover); color: var(--text); border-color: #555; }
+
+  /* ─── BACK BUTTON ─── */
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .back-btn:hover { background: var(--bg-secondary); color: var(--text); }
+
+  /* ─── DIVIDER ─── */
+  hr.section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  .fade-in { animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* skill bar */
+  .skill-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .skill-label { width: 120px; font-size: 13px; color: var(--text-dim); flex-shrink: 0; }
+  .skill-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; }
+  .skill-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.8s ease; }
+
+  .lang-level { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+
+  @media (max-width: 600px) {
+    .pills-row { gap: 6px; }
+    .pill { font-size: 12px; padding: 8px 12px; }
+    .home-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── TOPBAR ─── -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand" onclick="goHome()">
+      <div class="brand-icon">✦</div>
+      <span>NinaGPT</span>
+      <span class="brand-chevron">▾</span>
+    </div>
+    <button class="back-btn" id="backBtn" style="display:none" onclick="goHome()">
+      ← <span data-fr="Nouvelle conversation" data-en="New chat">Nouvelle conversation</span>
+    </button>
+  </div>
+  <div class="topbar-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnFR" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="https://www.linkedin.com/in/nina-schoellhammer-4a4492330/" target="_blank" class="btn-outline">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+      LinkedIn
+    </a>
+    <a href="https://github.com/forkmango/" target="_blank" class="btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      GitHub
+    </a>
+  </div>
+</header>
+
+<!-- ─── HOME SCREEN ─── -->
+<main class="home-screen" id="homeScreen">
+  <h1 class="home-title" id="homeTitle">Ready when you are.</h1>
+
+  <div class="search-wrapper">
+    <textarea class="search-box" id="mainSearch" rows="1"
+      placeholder="Ask me anything about Nina…"
+      oninput="handleInput(this)"
+      onkeydown="handleKey(event)"
+      onfocus="showSuggestions()"
+    ></textarea>
+    <button class="search-send" id="mainSendBtn" onclick="submitSearch()" disabled>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+    </button>
+    <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
+  </div>
+
+  <div class="pills-row" id="pillsRow"></div>
+</main>
+
+<!-- ─── RESPONSE SCREEN ─── -->
+<section class="response-screen" id="responseScreen">
+  <div class="response-content" id="responseContent"></div>
+</section>
+
+<!-- ─── BOTTOM BAR (response mode) ─── -->
+<div class="bottom-bar" id="bottomBar" style="display:none">
+  <div class="bottom-input-wrap">
+    <textarea class="bottom-box" id="bottomSearch" rows="1"
+      placeholder="Ask another question…"
+      oninput="handleBottomInput(this)"
+      onkeydown="handleBottomKey(event)"
+    ></textarea>
+    <button class="bottom-send" onclick="submitBottom()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───
+let currentLang = 'fr';
+
+// ─── CONTENT DATABASE ───
+const content = {
+  suggestions: {
+    fr: [
+      { key: 'intro',    icon: '👋', label: 'À propos de Nina',     sub: 'Qui suis-je ?' },
+      { key: 'parcours', icon: '🎓', label: 'Parcours académique',  sub: 'Formation & diplômes' },
+      { key: 'projets',  icon: '🛠️', label: 'Mes projets',          sub: 'Ce que j\'ai construit' },
+      { key: 'skills',   icon: '⚡', label: 'Compétences',          sub: 'Langages & outils' },
+    ],
+    en: [
+      { key: 'intro',    icon: '👋', label: 'About Nina',           sub: 'Who am I?' },
+      { key: 'parcours', icon: '🎓', label: 'Academic background',  sub: 'Education & degrees' },
+      { key: 'projets',  icon: '🛠️', label: 'My projects',          sub: 'What I\'ve built' },
+      { key: 'skills',   icon: '⚡', label: 'Skills',               sub: 'Languages & tools' },
+    ]
+  },
+  pills: {
+    fr: [
+      { key: 'intro',    emoji: '👋', label: 'Qui est Nina ?' },
+      { key: 'parcours', emoji: '🎓', label: 'Parcours' },
+      { key: 'projets',  emoji: '🛠️', label: 'Projets' },
+      { key: 'skills',   emoji: '⚡', label: 'Compétences' },
+    ],
+    en: [
+      { key: 'intro',    emoji: '👋', label: 'Who is Nina?' },
+      { key: 'parcours', emoji: '🎓', label: 'Background' },
+      { key: 'projets',  emoji: '🛠️', label: 'Projects' },
+      { key: 'skills',   emoji: '⚡', label: 'Skills' },
+    ]
+  }
+};
+
+// ─── RESPONSES ───
+function getResponse(key) {
+  const fr = {
+    intro: {
+      query: 'Qui est Nina ?',
+      html: `
+        <h2>Nina Schoellhammer</h2>
+        <p>Bonne question — parlons de la personne la plus importante de ce portfolio 😄</p>
+        <p>Je suis <strong>Nina Schoellhammer</strong>, étudiante en 2ème année de <strong>BUT Informatique</strong> à l'Université Paris-Saclay. J'ai 19 ans, je suis passionnée par les bases de données et l'intelligence artificielle, et je cherche à transformer chaque projet en apprentissage concret.</p>
+        <p>Mon objectif ? Évoluer dans un environnement tech stimulant, où je peux faire rimer rigueur avec curiosité. Je suis actuellement à la recherche d'un <strong>stage de 12 semaines</strong> (à partir d'avril 2025, flexible) en tant que <strong>Data Analyst / Data Scientist</strong> ou spécialiste bases de données.</p>
+        <hr class="section-divider">
+        <h3>📬 Contact</h3>
+        <p>
+          <span class="tag">📧 nina.schoellhammer@universite-paris-saclay.fr</span>
+          <span class="tag">📞 +33 (0)6 31 61 33 47</span>
+          <span class="tag">📍 Orsay, 91400</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🌍 Langues</h3>
+        <p>
+          <span class="tag green">Français C2 — natif</span>
+          <span class="tag blue">Anglais C1 — courant</span>
+          <span class="tag purple">Japonais B2 — intermédiaire avancé</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🎯 Centres d'intérêt</h3>
+        <p>En dehors du code : Game Jams (oui, je construis des jeux en 26h chrono) et création & design — notamment le nail art. Preuve qu'on peut être à la fois rigoureuse sur un schéma SQL et artistique sur 10 ongles.</p>
+      `
+    },
+    parcours: {
+      query: 'Parcours académique de Nina',
+      html: `
+        <h2>Parcours académique</h2>
+        <p>Le parcours scolaire de Nina, tel que résumé par ses résultats et ses curiosités :</p>
+        <div class="timeline-item">
+          <div class="timeline-dot">🎓</div>
+          <div class="timeline-body">
+            <div class="timeline-date">2024 – 2027</div>
+            <div class="timeline-title">BUT Informatique — Université Paris-Saclay, Gif-sur-Yvette</div>
+            <div class="timeline-sub">
+              Spécialisation en <strong>bases de données</strong> et <strong>IA</strong>. Formation pluridisciplinaire couvrant :<br>
+              <span class="tag">Bases de données & SQL</span>
+              <span class="tag">Programmation système</span>
+              <span class="tag">Architecture réseaux</span>
+              <span class="tag">Dev orienté objet</span>
+              <span class="tag">Qualité de code</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">🏅</div>
+          <div class="timeline-body">
+            <div class="timeline-date">2024</div>
+            <div class="timeline-title">Baccalauréat — mention Bien</div>
+            <div class="timeline-sub">Diplôme obtenu avec mention, ouvrant la voie vers le BUT Informatique.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">📚</div>
+          <div class="timeline-body">
+            <div class="timeline-date">2022 – 2024</div>
+            <div class="timeline-title">Lycée Général et Technologique Louis Bascan — Rambouillet</div>
+            <div class="timeline-sub">
+              Spécialités :<br>
+              <span class="tag">Systèmes d'information & numérique</span>
+              <span class="tag">Industries & développement durable</span>
+              <span class="tag">Innovation technologique</span>
+            </div>
+          </div>
+        </div>
+        <hr class="section-divider">
+        <p style="color:var(--text-muted); font-size:13px;">🔎 Résumé : Nina a suivi une trajectoire cohérente vers l'informatique dès le lycée, avec une orientation claire vers la data et le développement. Chaque étape a renforcé la suivante.</p>
+      `
+    },
+    projets: {
+      query: 'Projets de Nina',
+      html: `
+        <h2>Mes projets</h2>
+        <p>Ce que j'ai construit — parce qu'apprendre en faisant, c'est ma philosophie :</p>
+        <div class="project-card">
+          <div class="project-card-title">☕ Application interactive Java <span class="tag blue">Java</span></div>
+          <div class="project-card-desc">Conception et développement d'une application interactive de gestion d'étudiants pour la Cité Internationale Universitaire de Paris. Gestion complète des données, interface utilisateur, logique métier.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🎮 Code Game Jam 2025 <span class="tag purple">Godot</span><span class="tag purple">C#</span></div>
+          <div class="project-card-desc">Développement d'un jeu vidéo complet en 26 heures en équipe de 5 personnes. Gestion du temps, du stress, et du merge de code en simultané — le vrai test de la collaboration dev.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🌐 Développement Web <span class="tag green">HTML</span><span class="tag green">CSS</span></div>
+          <div class="project-card-desc">Développement d'un site web from scratch. Structuration du contenu, mise en forme responsive, bonne pratiques d'accessibilité et de sémantique HTML.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🗄️ Création d'une base de données <span class="tag orange">SQL</span><span class="tag orange">SQLite</span></div>
+          <div class="project-card-desc">Recueil d'informations auprès de professionnels, modélisation en schéma, développement et insertion en base. Projet complet de A à Z, du terrain à la donnée structurée.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🍓 Poste de développement Linux <span class="tag green">Linux</span><span class="tag orange">SQLite</span></div>
+          <div class="project-card-desc">Installation de Linux sur Raspberry Pi + configuration d'un logiciel de gestion de base de données. Setup from scratch d'un environnement de dev embarqué.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🎲 Jeux vidéo C++ <span class="tag blue">C++</span></div>
+          <div class="project-card-desc">Implémentation de deux jeux en C++ : un jeu vidéo complet et un jeu simple. Logique de jeu, boucle d'événements, gestion d'état — la programmation objet dans toute sa splendeur.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🌦️ Station météo Bluetooth <span class="tag purple">IoT</span><span class="tag purple">Bluetooth</span></div>
+          <div class="project-card-desc">Conception d'un appareil capturant des données météorologiques, les stockant et les transmettant à distance via Bluetooth. Projet hardware + software, le meilleur des deux mondes.</div>
+        </div>
+      `
+    },
+    skills: {
+      query: 'Compétences de Nina',
+      html: `
+        <h2>Compétences</h2>
+        <p>Le stack complet — ce que je maîtrise, ce que j'utilise, et ce que j'apprends encore :</p>
+        <h3>💻 Langages de programmation</h3>
+        <div class="skill-row"><div class="skill-label">C++</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:75%"></div></div></div>
+        <div class="skill-row"><div class="skill-label">SQL</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%"></div></div></div>
+        <div class="skill-row"><div class="skill-label">Java</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:65%"></div></div></div>
+        <div class="skill-row"><div class="skill-label">HTML & CSS</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:70%"></div></div></div>
+        <hr class="section-divider">
+        <h3>🗄️ Bases de données & outils</h3>
+        <p>
+          <span class="tag orange">Oracle SQL Developer</span>
+          <span class="tag orange">SQLite</span>
+          <span class="tag orange">Power BI</span>
+        </p>
+        <h3>🛠️ Environnements & dev</h3>
+        <p>
+          <span class="tag">VSCode</span>
+          <span class="tag">Codeblocks</span>
+          <span class="tag green">Git</span>
+          <span class="tag green">GitHub</span>
+          <span class="tag green">GitLab</span>
+        </p>
+        <h3>🖥️ Systèmes d'exploitation</h3>
+        <p>
+          <span class="tag">Windows</span>
+          <span class="tag">Linux</span>
+          <span class="tag">MacOS</span>
+          <span class="tag">MS-DOS</span>
+        </p>
+        <h3>📎 Bureautique</h3>
+        <p>
+          <span class="tag">MS Word</span>
+          <span class="tag">MS Excel</span>
+          <span class="tag">MS PowerPoint</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🤝 Soft skills</h3>
+        <p>
+          <span class="tag green">Leadership</span>
+          <span class="tag green">Gestion d'équipe</span>
+          <span class="tag blue">Autonomie</span>
+          <span class="tag blue">Discipline</span>
+          <span class="tag purple">Développement d'algorithmes</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🌍 Langues</h3>
+        <p>
+          <span class="tag green">Français C2</span>
+          <span class="tag blue">Anglais C1</span>
+          <span class="tag purple">Japonais B2</span>
+        </p>
+      `
+    }
+  };
+
+  const en = {
+    intro: {
+      query: 'Who is Nina?',
+      html: `
+        <h2>Nina Schoellhammer</h2>
+        <p>Great question — let's talk about the most important person in this portfolio 😄</p>
+        <p>I'm <strong>Nina Schoellhammer</strong>, a 2nd-year student in a <strong>BUT in Computer Science</strong> at Université Paris-Saclay. I'm 19, passionate about databases and AI, and I love turning every project into a real learning experience.</p>
+        <p>My goal? To grow in a stimulating tech environment where rigor and curiosity go hand in hand. I'm currently looking for a <strong>12-week internship</strong> (from around April 2025, flexible) as a <strong>Data Analyst / Data Scientist</strong> or database specialist.</p>
+        <hr class="section-divider">
+        <h3>📬 Contact</h3>
+        <p>
+          <span class="tag">📧 nina.schoellhammer@universite-paris-saclay.fr</span>
+          <span class="tag">📞 +33 (0)6 31 61 33 47</span>
+          <span class="tag">📍 Orsay, 91400</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🌍 Languages</h3>
+        <p>
+          <span class="tag green">French C2 — native</span>
+          <span class="tag blue">English C1 — fluent</span>
+          <span class="tag purple">Japanese B2 — upper intermediate</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🎯 Interests</h3>
+        <p>Outside of code: Game Jams (yes, I build games in 26h flat) and creation & design — nail art in particular. Proof that you can be rigorous on a SQL schema and artistic on 10 nails at the same time.</p>
+      `
+    },
+    parcours: {
+      query: "Nina's academic background",
+      html: `
+        <h2>Academic Background</h2>
+        <p>Nina's educational path — shaped by consistent choices and growing curiosity:</p>
+        <div class="timeline-item">
+          <div class="timeline-dot">🎓</div>
+          <div class="timeline-body">
+            <div class="timeline-date">2024 – 2027</div>
+            <div class="timeline-title">BUT in Computer Science — Université Paris-Saclay, Gif-sur-Yvette</div>
+            <div class="timeline-sub">
+              Specialisation in <strong>databases</strong> and <strong>AI</strong>. Multi-disciplinary program covering:<br>
+              <span class="tag">Databases & SQL</span>
+              <span class="tag">Systems programming</span>
+              <span class="tag">Network architecture</span>
+              <span class="tag">Object-oriented dev</span>
+              <span class="tag">Code quality</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">🏅</div>
+          <div class="timeline-body">
+            <div class="timeline-date">2024</div>
+            <div class="timeline-title">French Baccalauréat — Mention Bien (with honours)</div>
+            <div class="timeline-sub">Graduated with distinction, paving the way to the BUT program.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">📚</div>
+          <div class="timeline-body">
+            <div class="timeline-date">2022 – 2024</div>
+            <div class="timeline-title">Lycée Louis Bascan — Rambouillet</div>
+            <div class="timeline-sub">
+              Specialties:<br>
+              <span class="tag">Information systems & digital tech</span>
+              <span class="tag">Industry & sustainable dev</span>
+              <span class="tag">Technological innovation</span>
+            </div>
+          </div>
+        </div>
+        <hr class="section-divider">
+        <p style="color:var(--text-muted); font-size:13px;">🔎 Summary: Nina built a clear path toward computer science from high school onward, with a consistent focus on data and development. Each step reinforced the next.</p>
+      `
+    },
+    projets: {
+      query: "Nina's projects",
+      html: `
+        <h2>Projects</h2>
+        <p>What I've built — because learning by doing is my philosophy:</p>
+        <div class="project-card">
+          <div class="project-card-title">☕ Interactive Java Application <span class="tag blue">Java</span></div>
+          <div class="project-card-desc">Design and development of an interactive student management app for the Cité Internationale Universitaire de Paris. Full data management, user interface, business logic.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🎮 Code Game Jam 2025 <span class="tag purple">Godot</span><span class="tag purple">C#</span></div>
+          <div class="project-card-desc">Built a complete video game in 26 hours as a team of 5. Time pressure, stress management, simultaneous code merges — the ultimate dev collaboration challenge.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🌐 Web Development <span class="tag green">HTML</span><span class="tag green">CSS</span></div>
+          <div class="project-card-desc">Built a website from scratch. Content structuring, responsive layout, accessibility and semantic HTML best practices.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🗄️ Database Creation <span class="tag orange">SQL</span><span class="tag orange">SQLite</span></div>
+          <div class="project-card-desc">Collected info from professionals, designed schemas, developed and inserted into a database. End-to-end project from fieldwork to structured data.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🍓 Linux Dev Workstation <span class="tag green">Linux</span><span class="tag orange">SQLite</span></div>
+          <div class="project-card-desc">Installed Linux on a Raspberry Pi and configured a database management tool. Full from-scratch setup of an embedded dev environment.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🎲 C++ Video Games <span class="tag blue">C++</span></div>
+          <div class="project-card-desc">Implemented two games in C++: a full video game and a simpler game. Game logic, event loop, state management — object-oriented programming at its finest.</div>
+        </div>
+        <div class="project-card">
+          <div class="project-card-title">🌦️ Bluetooth Weather Station <span class="tag purple">IoT</span><span class="tag purple">Bluetooth</span></div>
+          <div class="project-card-desc">Designed a device capturing weather data, storing it, and transmitting it remotely via Bluetooth. A hardware + software project — best of both worlds.</div>
+        </div>
+      `
+    },
+    skills: {
+      query: "Nina's skills",
+      html: `
+        <h2>Skills</h2>
+        <p>The full stack — what I master, what I use, and what I'm still learning:</p>
+        <h3>💻 Programming Languages</h3>
+        <div class="skill-row"><div class="skill-label">C++</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:75%"></div></div></div>
+        <div class="skill-row"><div class="skill-label">SQL</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%"></div></div></div>
+        <div class="skill-row"><div class="skill-label">Java</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:65%"></div></div></div>
+        <div class="skill-row"><div class="skill-label">HTML & CSS</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:70%"></div></div></div>
+        <hr class="section-divider">
+        <h3>🗄️ Databases & Tools</h3>
+        <p>
+          <span class="tag orange">Oracle SQL Developer</span>
+          <span class="tag orange">SQLite</span>
+          <span class="tag orange">Power BI</span>
+        </p>
+        <h3>🛠️ Dev Environments</h3>
+        <p>
+          <span class="tag">VSCode</span>
+          <span class="tag">Codeblocks</span>
+          <span class="tag green">Git</span>
+          <span class="tag green">GitHub</span>
+          <span class="tag green">GitLab</span>
+        </p>
+        <h3>🖥️ Operating Systems</h3>
+        <p>
+          <span class="tag">Windows</span>
+          <span class="tag">Linux</span>
+          <span class="tag">MacOS</span>
+          <span class="tag">MS-DOS</span>
+        </p>
+        <h3>📎 Office Tools</h3>
+        <p>
+          <span class="tag">MS Word</span>
+          <span class="tag">MS Excel</span>
+          <span class="tag">MS PowerPoint</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🤝 Soft Skills</h3>
+        <p>
+          <span class="tag green">Leadership</span>
+          <span class="tag green">Team management</span>
+          <span class="tag blue">Autonomy</span>
+          <span class="tag blue">Discipline</span>
+          <span class="tag purple">Algorithm development</span>
+        </p>
+        <hr class="section-divider">
+        <h3>🌍 Languages</h3>
+        <p>
+          <span class="tag green">French C2</span>
+          <span class="tag blue">English C1</span>
+          <span class="tag purple">Japanese B2</span>
+        </p>
+      `
+    }
+  };
+
+  return currentLang === 'fr' ? fr[key] : en[key];
+}
+
+// ─── LANG ───
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btnFR').classList.toggle('active', lang === 'fr');
+  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+  document.documentElement.lang = lang;
+
+  const titles = {
+    fr: 'Ready when you are.',
+    en: 'Ready when you are.'
+  };
+  document.getElementById('homeTitle').textContent = titles[lang];
+  document.querySelector('#mainSearch').placeholder = lang === 'fr' ? 'Pose-moi une question sur Nina…' : 'Ask me anything about Nina…';
+  document.querySelector('#bottomSearch').placeholder = lang === 'fr' ? 'Pose une autre question…' : 'Ask another question…';
+  
+  // update back button
+  const bb = document.querySelector('#backBtn span');
+  if (bb) bb.textContent = lang === 'fr' ? 'Nouvelle conversation' : 'New chat';
+
+  renderPills();
+  renderSuggestions('');
+}
+
+// ─── PILLS ───
+function renderPills() {
+  const pills = content.pills[currentLang];
+  const row = document.getElementById('pillsRow');
+  row.innerHTML = pills.map(p => `
+    <button class="pill" onclick="navigate('${p.key}')">
+      <span class="pill-emoji">${p.emoji}</span>${p.label}
+    </button>
+  `).join('');
+}
+
+// ─── SUGGESTIONS ───
+function renderSuggestions(query) {
+  const sugs = content.suggestions[currentLang];
+  const filtered = query.trim()
+    ? sugs.filter(s => s.label.toLowerCase().includes(query.toLowerCase()) || s.key.includes(query.toLowerCase()))
+    : sugs;
+  
+  const dd = document.getElementById('suggestionsDropdown');
+  if (filtered.length === 0) { dd.classList.remove('visible'); return; }
+  
+  dd.innerHTML = filtered.map(s => `
+    <div class="suggestion-item" onclick="navigate('${s.key}')">
+      <div class="suggestion-icon">${s.icon}</div>
+      <div>
+        <div>${s.label}</div>
+        <div class="suggestion-meta">${s.sub}</div>
+      </div>
+    </div>
+  `).join('');
+  dd.classList.add('visible');
+}
+
+function showSuggestions() {
+  renderSuggestions(document.getElementById('mainSearch').value);
+}
+
+function hideSuggestions() {
+  setTimeout(() => document.getElementById('suggestionsDropdown').classList.remove('visible'), 150);
+}
+
+// ─── INPUT HANDLERS ───
+function handleInput(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+  const val = el.value.trim();
+  document.getElementById('mainSendBtn').disabled = !val;
+  renderSuggestions(val);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitSearch(); }
+  if (e.key === 'Escape') hideSuggestions();
+}
+
+function handleBottomInput(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function handleBottomKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitBottom(); }
+}
+
+// ─── NAVIGATION ───
+function navigate(key) {
+  hideSuggestions();
+  document.getElementById('mainSearch').value = '';
+  document.getElementById('mainSendBtn').disabled = true;
+  showResponse(key);
+}
+
+function submitSearch() {
+  const val = document.getElementById('mainSearch').value.trim();
+  if (!val) return;
+  
+  // Try to match to a section
+  const keys = ['intro', 'parcours', 'projets', 'skills'];
+  const sugs = content.suggestions[currentLang];
+  const match = sugs.find(s =>
+    s.label.toLowerCase().includes(val.toLowerCase()) ||
+    s.key.includes(val.toLowerCase()) ||
+    val.toLowerCase().includes(s.key)
+  );
+  
+  if (match) {
+    navigate(match.key);
+  } else {
+    // Show a "I don't understand" response
+    showUnknown(val);
+  }
+}
+
+function submitBottom() {
+  const val = document.getElementById('bottomSearch').value.trim();
+  if (!val) return;
+  document.getElementById('bottomSearch').value = '';
+  
+  const sugs = content.suggestions[currentLang];
+  const match = sugs.find(s =>
+    s.label.toLowerCase().includes(val.toLowerCase()) ||
+    s.key.includes(val.toLowerCase()) ||
+    val.toLowerCase().includes(s.key)
+  );
+  
+  if (match) {
+    navigate(match.key);
+  } else {
+    appendUnknown(val);
+  }
+}
+
+// ─── SHOW RESPONSE ───
+function showResponse(key) {
+  const data = getResponse(key);
+  const responseScreen = document.getElementById('responseScreen');
+  const homeScreen = document.getElementById('homeScreen');
+  const bottomBar = document.getElementById('bottomBar');
+  const backBtn = document.getElementById('backBtn');
+  
+  homeScreen.style.display = 'none';
+  responseScreen.classList.add('active');
+  bottomBar.style.display = 'block';
+  backBtn.style.display = 'flex';
+  
+  const relatedKeys = ['intro','parcours','projets','skills'].filter(k => k !== key);
+  const relatedPills = content.suggestions[currentLang].filter(s => relatedKeys.includes(s.key));
+  const relatedLabel = currentLang === 'fr' ? 'Explorer aussi' : 'Explore more';
+  
+  document.getElementById('responseContent').innerHTML = `
+    <div class="user-message-bubble fade-in">
+      <div class="user-bubble">${data.query}</div>
+    </div>
+    <div class="nina-response fade-in" id="ninaResponseBlock">
+      <div class="nina-avatar">✦</div>
+      <div class="nina-text">
+        <div class="typing-indicator" id="typingDots">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  window.scrollTo(0, 0);
+  
+  setTimeout(() => {
+    const ninaText = document.querySelector('#ninaResponseBlock .nina-text');
+    ninaText.innerHTML = data.html + `
+      <div class="related-section">
+        <div class="related-title">${relatedLabel}</div>
+        <div class="related-pills">
+          ${relatedPills.map(p => `<div class="related-pill" onclick="navigate('${p.key}')">${p.icon} ${p.label}</div>`).join('')}
+        </div>
+      </div>
+    `;
+  }, 900);
+}
+
+function appendUnknown(query) {
+  const content_el = document.getElementById('responseContent');
+  const unknownMsg = currentLang === 'fr'
+    ? `Hmm, je ne suis pas sûre de comprendre exactement ce que tu cherches 🤔 Essaie de cliquer sur l'une des sections ci-dessous, ou utilise des mots-clés comme <em>intro</em>, <em>projets</em>, <em>parcours</em>, ou <em>skills</em>.`
+    : `Hmm, I'm not quite sure what you're looking for 🤔 Try clicking one of the sections below, or use keywords like <em>intro</em>, <em>projects</em>, <em>background</em>, or <em>skills</em>.`;
+  
+  const sugs = content.suggestions[currentLang];
+  content_el.innerHTML += `
+    <div class="user-message-bubble fade-in"><div class="user-bubble">${query}</div></div>
+    <div class="nina-response fade-in">
+      <div class="nina-avatar">✦</div>
+      <div class="nina-text">
+        <p>${unknownMsg}</p>
+        <div class="related-pills" style="margin-top:12px">
+          ${sugs.map(s => `<div class="related-pill" onclick="navigate('${s.key}')">${s.icon} ${s.label}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
+function showUnknown(query) {
+  const responseScreen = document.getElementById('responseScreen');
+  const homeScreen = document.getElementById('homeScreen');
+  const bottomBar = document.getElementById('bottomBar');
+  const backBtn = document.getElementById('backBtn');
+  
+  homeScreen.style.display = 'none';
+  responseScreen.classList.add('active');
+  bottomBar.style.display = 'block';
+  backBtn.style.display = 'flex';
+  
+  document.getElementById('responseContent').innerHTML = '';
+  appendUnknown(query);
+}
+
+// ─── GO HOME ───
+function goHome() {
+  document.getElementById('homeScreen').style.display = '';
+  document.getElementById('responseScreen').classList.remove('active');
+  document.getElementById('bottomBar').style.display = 'none';
+  document.getElementById('backBtn').style.display = 'none';
+  document.getElementById('mainSearch').value = '';
+  document.getElementById('mainSendBtn').disabled = true;
+  document.getElementById('responseContent').innerHTML = '';
+  window.scrollTo(0, 0);
+}
+
+// ─── CLOSE SUGGESTIONS ON CLICK OUTSIDE ───
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-wrapper')) hideSuggestions();
+});
+
+// ─── INIT ───
+setLang('fr');
+</script>
+</body>
 </html>
